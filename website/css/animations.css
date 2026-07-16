@@ -1,0 +1,319 @@
+/* Scroll animation & transition utilities */
+
+/* Sticky Hero Narrative Layout */
+.narrative-section {
+    position: relative;
+    height: 400vh; /* 4 steps * 100vh */
+    background-color: var(--color-bg-darkest);
+    border-top: 1px solid var(--color-border);
+}
+
+.narrative-sticky-container {
+    position: sticky;
+    top: 70px; /* height of header */
+    height: calc(100vh - 70px);
+    overflow: hidden;
+}
+
+.narrative-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100%;
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: var(--spacing-lg) var(--spacing-md);
+    gap: var(--spacing-xl);
+}
+
+/* Narrative text styling */
+.narrative-text-pane {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.narrative-step {
+    position: absolute;
+    opacity: 0;
+    transform: translateY(40px);
+    pointer-events: none;
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.narrative-step.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+    position: relative;
+}
+
+.step-num {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: var(--color-accent);
+    letter-spacing: 2px;
+    margin-bottom: var(--spacing-sm);
+}
+
+.narrative-step h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text-primary);
+}
+
+.synthesis-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -2px;
+    margin-top: -10px;
+    margin-bottom: var(--spacing-md);
+    font-style: italic;
+    background: linear-gradient(135deg, #fff 0%, #8e8e93 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.step-desc {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    max-width: 440px;
+}
+
+/* Narrative visual styling */
+.narrative-visual-pane {
+    position: relative;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.visual-wrapper {
+    position: absolute;
+    width: 100%;
+    height: 90%;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-dark);
+    overflow: hidden;
+}
+
+.visual-wrapper.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.narrative-image {
+    width: 85%;
+    height: 85%;
+    object-fit: contain;
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.visual-wrapper.active .narrative-image {
+    transform: scale(1.05);
+}
+
+/* Radar scan effect for Scout (Vector) visual wrapper */
+.radar-scan {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    pointer-events: none;
+    background: linear-gradient(rgba(47, 128, 237, 0.05) 0%, transparent 60%);
+    transform: rotate(0deg) translate(-25%, -25%);
+    transform-origin: center;
+    animation: radar-rotate 8s infinite linear;
+}
+
+@keyframes radar-rotate {
+    100% {
+        transform: rotate(360deg) translate(-25%, -25%);
+    }
+}
+
+/* Trio assembly view (Phase 4) */
+.trio-composition {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.trio-image {
+    position: absolute;
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease;
+}
+
+.trio-vector {
+    left: 5%;
+    transform: translateX(-40px);
+    opacity: 0.3;
+}
+
+.trio-core {
+    z-index: 10;
+    top: 15%;
+    transform: translateY(-20px);
+}
+
+.trio-rescue {
+    right: 5%;
+    transform: translateX(40px);
+    opacity: 0.3;
+}
+
+.active .trio-vector,
+.active .trio-rescue {
+    transform: translateX(0);
+    opacity: 0.85;
+}
+
+.active .trio-core {
+    transform: translateY(0);
+}
+
+/* Architecture SVG Flow Lines */
+.flow-line {
+    fill: none;
+    stroke: var(--color-border);
+    stroke-width: 2px;
+    stroke-linecap: round;
+    transition: stroke var(--transition-smooth);
+}
+
+.flow-line.branching {
+    stroke-dasharray: 4 4;
+}
+
+/* Animated flow dot overlays using CSS on SVG paths */
+#arch-diagram.scrolled-in .flow-line {
+    stroke: var(--color-accent);
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: draw-line 3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+#arch-diagram.scrolled-in .flow-line.branching {
+    stroke-dasharray: 6;
+    animation: dashes-travel 10s infinite linear;
+}
+
+@keyframes draw-line {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes dashes-travel {
+    to {
+        stroke-dashoffset: -100;
+    }
+}
+
+/* Diagram Nodes Hover styling */
+.node-box {
+    fill: var(--color-bg-dark);
+    stroke: var(--color-border);
+    stroke-width: 1.5px;
+    transition: var(--transition-fast);
+}
+
+.node-box.highlighted {
+    fill: var(--color-bg-panel);
+    stroke: var(--color-accent);
+}
+
+.node-box.danger-border {
+    stroke: var(--color-border);
+}
+
+.diagram-node:hover .node-box {
+    stroke: var(--color-text-primary);
+    fill: var(--color-bg-card);
+}
+
+.diagram-node:hover .node-box.highlighted {
+    stroke: var(--color-accent);
+    fill: var(--color-accent-dim);
+}
+
+.node-title {
+    fill: var(--color-text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    pointer-events: none;
+    transition: fill var(--transition-fast);
+}
+
+.diagram-node:hover .node-title {
+    fill: var(--color-text-primary);
+}
+
+/* Responsive adjustments for scroller */
+@media (max-width: 960px) {
+    .narrative-section {
+        height: auto;
+    }
+    
+    .narrative-sticky-container {
+        position: relative;
+        top: 0;
+        height: auto;
+        overflow: visible;
+    }
+    
+    .narrative-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    
+    .narrative-text-pane {
+        order: 2;
+        height: auto;
+    }
+    
+    .narrative-step {
+        position: relative;
+        opacity: 1;
+        transform: none;
+        margin-bottom: var(--spacing-xl);
+    }
+    
+    .narrative-visual-pane {
+        order: 1;
+        height: 320px;
+    }
+    
+    .visual-wrapper {
+        height: 100%;
+        position: relative;
+        display: none;
+    }
+    
+    .visual-wrapper.active {
+        display: flex;
+    }
+}
